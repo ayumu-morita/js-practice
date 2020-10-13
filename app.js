@@ -1,38 +1,75 @@
-// let hensu = 'Hello World';
+const quiz = [
+  {
+    question: 'ゲーム史上、最も売れたゲーム機はどれ？',
+    answers: [ 'スーパーファミコン', 'PlayStation 2', 'ニンテンドーDS', 'Xbox 360'],
+    correct: 'ニンテンドーDS'
+  }, {
+    question: '糸井重里が企画に関わった、任天堂の看板ゲームといえば？',
+    answers: [ 'MOTHER2', 'スーパーマリオブラザーズ3', 'スーパードンキーコング', '星のカービィ'],
+    correct: 'MOTHER2'
+  }, {
+    question: 'ファイナルファンタジーⅣの主人公の名前は？',
+    answers: [ 'フリオニール', 'クラウド', 'ティーダ', 'セシル'],
+    correct: 'セシル'
+  }
+];
 
-// //hensu = 'HEllo world2'
+const $window = window;
+const $doc = document;
+const $question = $doc.getElementById('js-question');
+const $buttons = $doc.querySelectorAll('.btn');
 
-// const bigUnko = 'hello world good';
+const quizLen = quiz.length;
+let quizCount = 0;
+let score = 0;
 
-let inoki = ['イーチ','ニー','さーん','だー']
+const init = () => {
+  $question.textContent = quiz[quizCount].question;
+  
+  const buttonLen = $buttons.length;
+  let btnIndex = 0;
+  
+  while(btnIndex < buttonLen){
+    $buttons[btnIndex].textContent = quiz[quizCount].answers[btnIndex];
+    btnIndex++;
+  }
+};
 
-// let index = 0
-// while(index < inoki.length){
-//   console.log(inoki[index])
-//   index++;
-// }
-
-
-
-const test = (arg)=> {
-  if(inoki.length > arg){
-    console.log('ボンバイエ！');
+const goToNext = () => {
+  quizCount++;
+  if(quizCount < quizLen){
+    init(quizCount);
   } else {
-    console.log('ボンバt！');
+    // $window.alert('クイズ終了！');
+    showEnd();
   }
 };
 
-const unko2 = {
-  color: 'pink',
-  size: 'large',
-  purfume: 'mint',
-  goToilet: () => {
-    console.log('hello');
+const judge = (elm) => {
+  if(elm.textContent === quiz[quizCount].correct){
+    $window.alert('正解!');
+    score++;
+  } else {
+    $window.alert('不正解!');
   }
+  goToNext();
 };
 
-window.alert('Hello');
+const showEnd = () => {
+  $question.textContent = '終了！あなたのスコアは' + score + '/' + quizLen + 'です';
+  
+  const $items = $doc.getElementById('js-items');
+  $items.style.visibility = 'hidden';
+};
 
-document.getElementsByTagName('button')[0].addEventListener('click', ()=> {
-  window.alert('hello ayumu')
-})
+init();
+
+let answersIndex = 0;
+let answersLen = quiz[quizCount].answers.length;
+
+while(answersIndex < answersLen){
+  $buttons[answersIndex].addEventListener('click', (e) => {
+    judge(e.target);
+  });
+  answersIndex++;
+}
